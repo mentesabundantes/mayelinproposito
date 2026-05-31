@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lo que vive dentro de ti · Test de Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1C2341;
+    --orange:#E8742A;
+    --cream:#F5F0E6;
+    --ink:#1C2341;
+    --muted:#6c7185;
+    --line:#ddd5c4;
+    --card:#fffdf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    font-weight:300;
+    background:var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* soft atmospheric blobs */
+  body::before{content:'';position:fixed;top:-120px;right:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(232,116,42,.10),transparent 70%);pointer-events:none;}
+  body::after{content:'';position:fixed;bottom:-140px;left:-140px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(28,35,65,.08),transparent 70%);pointer-events:none;}
+
+  .wrap{max-width:680px;margin:0 auto;padding:28px 22px 80px;position:relative;}
+
+  /* progress */
+  .progress-shell{position:sticky;top:0;z-index:10;background:linear-gradient(var(--cream) 70%,transparent);padding:14px 0 10px;}
+  .progress-meta{display:flex;justify-content:space-between;align-items:baseline;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--muted);margin-bottom:7px;}
+  .progress-meta b{color:var(--orange);font-weight:600;}
+  .bar{height:5px;background:#e7e0d1;border-radius:99px;overflow:hidden;}
+  .bar>i{display:block;height:100%;width:0;background:var(--orange);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+
+  .screen{display:none;animation:rise .55s cubic-bezier(.2,.7,.2,1);}
+  .screen.active{display:block;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:3px;font-size:13px;font-weight:600;color:var(--orange);}
+  h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:46px;line-height:1.02;color:var(--navy);margin:10px 0 16px;}
+  h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:33px;line-height:1.05;color:var(--navy);margin:6px 0 6px;}
+  .layer-intro{font-style:italic;color:var(--muted);font-size:16px;margin-bottom:22px;max-width:90%;}
+  p.lead{font-size:17px;color:#43485f;margin-bottom:18px;}
+
+  .quote{border-left:3px solid var(--orange);padding:6px 0 6px 16px;font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:500;color:var(--navy);margin:18px 0 26px;}
+
+  .field{margin-bottom:22px;}
+  .field label{display:block;font-weight:500;color:var(--navy);font-size:15.5px;margin-bottom:9px;}
+  .field label .n{color:var(--orange);font-weight:600;font-family:'Barlow Condensed',sans-serif;margin-right:5px;}
+  .hint{display:block;font-style:italic;color:#9a9685;font-weight:300;font-size:13px;margin-top:2px;}
+  input[type=text],input[type=email],textarea{
+    width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;
+    padding:13px 15px;font-family:'DM Sans',sans-serif;font-size:15.5px;color:var(--ink);
+    resize:vertical;transition:border-color .2s,box-shadow .2s;
+  }
+  textarea{min-height:84px;line-height:1.55;}
+  input:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,116,42,.13);}
+
+  .nav{display:flex;gap:12px;margin-top:30px;align-items:center;}
+  button{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:15px;border:none;border-radius:99px;cursor:pointer;transition:transform .15s,background .2s,opacity .2s;}
+  .btn-primary{background:var(--orange);color:#fff;padding:14px 30px;}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--muted);padding:14px 14px;}
+  .btn-ghost:hover{color:var(--navy);}
+  .btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+  .spacer{flex:1;}
+
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px;}
+  .pill{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:12px;background:#ece5d6;color:var(--navy);padding:5px 12px;border-radius:99px;}
+
+  /* welcome / closing centered */
+  .center{text-align:center;padding-top:24px;}
+  .center .quote{display:inline-block;text-align:left;}
+  .badge{width:54px;height:54px;border-radius:50%;background:var(--navy);color:var(--cream);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:24px;margin:0 auto 14px;}
+  .savednote{font-size:12px;color:#a7a392;margin-top:14px;text-align:center;font-style:italic;}
+  .err{color:#b23b2e;font-size:13px;margin-top:10px;display:none;}
+  .footer{text-align:center;font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;font-size:11px;color:#b3ae9d;margin-top:44px;}
+
+  .checkwrap{text-align:center;padding:30px 0;}
+  .checkwrap .ring{width:78px;height:78px;border-radius:50%;border:3px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:34px;color:var(--orange);}
+  .loader{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-4px;margin-right:8px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  @media(max-width:520px){h1{font-size:38px;}h2{font-size:28px;}.wrap{padding:20px 16px 70px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- progress -->
+  <div class="progress-shell" id="progressShell" style="display:none;">
+    <div class="progress-meta"><span id="capaLabel">Capa 1 de 9</span><span id="pctLabel"><b>0%</b></span></div>
+    <div class="bar"><i id="barFill"></i></div>
+  </div>
+
+  <!-- =========== WELCOME =========== -->
+  <section class="screen active" data-screen="welcome">
+    <div class="center">
+      <div class="eyebrow">Exploración de Propósito · Mentes Abundantes</div>
+      <h1>Lo que vive<br>dentro de ti</h1>
+      <p class="lead">Este no es un test que se aprueba. Es un espejo.<br>
+      No hay respuestas correctas: hay respuestas <strong>honestas</strong>.<br>
+      Tómate tu tiempo. Responde desde el cuerpo, no desde la cabeza.</p>
+      <div class="quote">"Yo vine a crear espacios tranquilos, seguros y de alegría a través de la gastronomía."</div>
+      <div class="field" style="text-align:left;max-width:420px;margin:0 auto 16px;">
+        <label>Tu nombre</label>
+        <input type="text" id="f_nombre" placeholder="Mayelin" autocomplete="off">
+      </div>
+      <div class="field" style="text-align:left;max-width:420px;margin:0 auto 24px;">
+        <label>Tu correo <span class="hint">opcional, para enviarte tu propósito al cerrar</span></label>
+        <input type="email" id="f_email" placeholder="tucorreo@ejemplo.com" autocomplete="off">
+      </div>
+      <button class="btn-primary" onclick="start()">Comenzar &nbsp;→</button>
+      <div class="savednote" id="resumeNote" style="display:none;">Encontramos respuestas guardadas. Puedes continuar donde lo dejaste.</div>
+    </div>
+  </section>
+
+  <!-- capas se inyectan aquí -->
+  <div id="capasMount"></div>
+
+  <!-- =========== CLOSING =========== -->
+  <section class="screen" data-screen="closing">
+    <div class="center">
+      <div class="badge">✦</div>
+      <h2>Gracias, <span id="closeName">Mayelin</span></h2>
+      <p class="lead">Todo lo que escribiste aquí es el material con el que vamos a construir.<br>
+      Cuando estés lista, envía tus respuestas y nosotros las recibimos con cuidado.</p>
+      <button class="btn-primary" id="sendBtn" onclick="enviar()">Enviar mis respuestas</button>
+      <div class="err" id="sendErr">No se pudo enviar. Revisa tu conexión e intenta de nuevo (tus respuestas siguen guardadas).</div>
+      <div class="savednote">Tus respuestas se guardan automáticamente en este dispositivo mientras respondes.</div>
+    </div>
+  </section>
+
+  <!-- =========== DONE =========== -->
+  <section class="screen" data-screen="done">
+    <div class="checkwrap">
+      <div class="ring">✓</div>
+      <h2>Recibido 🤍</h2>
+      <p class="lead">Tus respuestas llegaron. Franklin y Krystina las leerán antes de la próxima sesión.<br>
+      Gracias por la honestidad: eso es lo que hace posible lo que sigue.</p>
+    </div>
+  </section>
+
+  <div class="footer">Preparado por Mr. Yamamoto · Facilitado por Franklin &amp; Krystina</div>
+</div>
+
+<script>
+/* ====================================================================
+   1) PEGA AQUÍ LA URL DE TU WEBHOOK (Apps Script /exec  o  Make.com)
+   ==================================================================== */
+const WEBHOOK_URL = "PEGA_AQUI_TU_URL_DEL_WEBHOOK";
+
+/* ====================================================================
+   2) PREGUNTAS  (9 capas)
+   ==================================================================== */
+const CAPAS = [
+  { t:"El espacio que ya vive en ti",
+    intro:"Cierra los ojos un momento. El lugar que viniste a crear ya existe. Solo vamos a describirlo.",
+    qs:[
+      {q:"Estás dentro de ese espacio que creaste. ¿Qué es lo primero que hueles?", h:"déjate llevar por el detalle"},
+      {q:"¿Qué sonidos hay? ¿Música, voces, risas, silencio? ¿Qué se escucha de fondo?"},
+      {q:"Mira a tu alrededor: la luz, los colores, los materiales, la mesa. Descríbelo como si yo no pudiera verlo."},
+      {q:"Cuando estás ahí, ¿qué siente tu cuerpo? ¿En qué parte lo sientes?"}
+    ]},
+  { t:"El hilo emocional",
+    intro:"Lo que damos suele ser lo que más necesitamos saber dar. Vamos despacio aquí.",
+    qs:[
+      {q:"Para ti, ¿qué significa de verdad que una persona se sienta «vista»? ¿Cómo se ve eso, en gestos concretos?"},
+      {q:"Recuerda un momento en que TÚ te sentiste profundamente segura y en paz. ¿Dónde estabas? ¿Quién? ¿Qué lo hacía posible?"},
+      {q:"Eso que quieres regalarle a los demás… ¿es algo que alguna vez deseaste recibir?", h:"responde solo si te sientes cómoda"},
+      {q:"Si tu propósito fuera una forma de cuidar, ¿a quién estarías cuidando en realidad?"}
+    ]},
+  { t:"Tus dones cuando nadie te mira",
+    intro:"No lo que sabes hacer, sino aquello que haces sin darte cuenta de que es un don.",
+    qs:[
+      {q:"¿En qué actividad pierdes la noción del tiempo? ¿Cuándo fue la última vez que te pasó?"},
+      {q:"¿Por qué cosa te dan las gracias una y otra vez, aunque para ti sea fácil?"},
+      {q:"Si alguien que te ama describiera tu «magia» en una frase, ¿qué diría?"},
+      {q:"¿Qué parte de crear experiencias gastronómicas te enciende y cuál te agota?", h:"esto define qué delegar después"}
+    ]},
+  { t:"La persona frente a ti",
+    intro:"Todo lo que vamos a construir tiene un rostro. Vamos a verlo.",
+    qs:[
+      {q:"Imagina a UNA sola persona sentada en tu espacio. ¿Quién es? ¿Cómo llegó? ¿Qué traía cargando antes de entrar?"},
+      {q:"Cuando se va, ¿cómo quieres que se sienta? Termina: «Quiero que salga de aquí sintiéndose…»"},
+      {q:"Si pudieras construir todo esto solo para UNA persona de tu vida, ¿para quién sería? ¿Por qué?"}
+    ]},
+  { t:"Lo que cuida el alma del proyecto",
+    intro:"Tus límites no son rigidez: son lo que protege que esto siga siendo tuyo.",
+    qs:[
+      {q:"¿Qué cosa NUNCA sacrificarías de este proyecto, ni por dinero ni por crecer más rápido?"},
+      {q:"Si una gran oportunidad te pidiera traicionar tu forma de hacer las cosas, ¿qué señal en tu cuerpo te diría «esto no»?"},
+      {q:"Nombra 3 valores que cualquier experiencia tuya debe respetar, sí o sí."}
+    ]},
+  { t:"El nudo",
+    intro:"Lo que nos frena casi nunca es la falta de capacidad. Es una historia vieja. Vamos a mirarla sin miedo.",
+    qs:[
+      {q:"Cuando piensas en hacer esto REAL, ¿qué es lo primero que te da miedo?"},
+      {q:"¿Qué historia sobre TI MISMA se interpone? («no soy…», «todavía no…», «quién soy yo para…»)"},
+      {q:"¿Para qué necesitarías darte permiso hoy, que aún no te has dado?"},
+      {q:"Si supieras con certeza que no puedes fracasar, ¿qué harías esta misma semana?"}
+    ]},
+  { t:"Merecimiento & abundancia",
+    intro:"El Pilar 4 pregunta por lo que pueden pagarte. Esta capa pregunta por lo que crees que mereces recibir.",
+    qs:[
+      {q:"Completa sin pensar mucho: «Recibir dinero por crear estos espacios significa que yo…»"},
+      {q:"¿Qué precio te da pudor pedir? ¿Qué crees que esa incomodidad está protegiendo?"},
+      {q:"¿Quién te enseñó, sin palabras, lo que «valías»? ¿Sigue siendo cierto para la mujer que eres hoy?"},
+      {q:"Si recibieras abundancia con total tranquilidad, ¿qué cambiaría en tu día, tu cuerpo, tu mirada?"}
+    ]},
+  { t:"Símbolo & arquetipo",
+    intro:"Tu mente racional ya habló bastante. Aquí responde la intuición. No analices: deja salir la primera imagen.",
+    qs:[
+      {q:"Si tu propósito fuera un animal, ¿cuál sería? ¿Y un objeto? ¿Y una estación del año?"},
+      {q:"¿De qué color es tu propósito? Descríbelo sin nombrar el color, solo cómo se siente."},
+      {q:"Si tu propósito pudiera hablarte, ¿qué frase te diría hoy al oído?"},
+      {q:"Tu espacio aún no tiene nombre… pero si cierras los ojos, ¿qué nombre quiere tener?", h:"no lo pienses, escúchalo"}
+    ]},
+  { t:"Tu sí más claro",
+    intro:"No vamos a definir metas todavía. Solo vamos a reconocer cómo se siente avanzar de verdad.",
+    qs:[
+      {q:"¿Cómo se ve un «suficiente» que te haga feliz? No el sueño máximo: el punto donde dirías «esto ya es una vida buena»."},
+      {q:"¿Cómo se siente el éxito en tu cuerpo?", h:"descríbelo como sensación, no como logro"},
+      {q:"Un paso pequeño y REAL que podrías dar en los próximos 30 días, que no te dé miedo:"},
+      {q:"Escríbete una promesa. Empieza con «Yo, Mayelin, me comprometo a…»"}
+    ]}
+];
+
+/* ====================================================================
+   3) LÓGICA
+   ==================================================================== */
+const STORAGE_KEY = "testProposito_mayelin_v1";
+let current = 0;            // 0 = welcome ; 1..9 = capas ; 10 = closing
+const TOTAL_CAPAS = CAPAS.length;
+
+// store helpers (degradan si el sandbox bloquea localStorage)
+function save(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(collect())); }catch(e){} }
+function load(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||"null"); }catch(e){ return null; } }
+
+// construir pantallas de capas
+const mount = document.getElementById('capasMount');
+CAPAS.forEach((capa, ci)=>{
+  const sec = document.createElement('section');
+  sec.className='screen';
+  sec.dataset.screen='capa'+ci;
+  let html = `<div class="eyebrow">Capa ${ci+1}</div><h2>${capa.t}</h2><p class="layer-intro">${capa.intro}</p>`;
+  capa.qs.forEach((item, qi)=>{
+    const id = `c${ci}_q${qi}`;
+    html += `<div class="field"><label><span class="n">${qi+1}.</span>${item.q}${item.h?`<span class="hint">${item.h}</span>`:''}</label>
+      <textarea id="${id}" data-capa="${capa.t}" data-q="${item.q.replace(/"/g,'&quot;')}" oninput="save()"></textarea></div>`;
+  });
+  html += `<div class="nav">
+      <button class="btn-ghost" onclick="prev()">← Atrás</button>
+      <span class="spacer"></span>
+      <button class="btn-primary" onclick="next()">${ci===TOTAL_CAPAS-1?'Terminar &nbsp;→':'Siguiente &nbsp;→'}</button>
+    </div>`;
+  sec.innerHTML=html;
+  mount.appendChild(sec);
+});
+
+const screens = Array.from(document.querySelectorAll('.screen'));
+// índice: 0 welcome, 1..9 capas, 10 closing, 11 done
+function showByIndex(i){
+  screens.forEach(s=>s.classList.remove('active'));
+  // map current -> screen element
+  let el;
+  if(i===0) el = document.querySelector('[data-screen="welcome"]');
+  else if(i>=1 && i<=TOTAL_CAPAS) el = document.querySelector('[data-screen="capa'+(i-1)+'"]');
+  else if(i===TOTAL_CAPAS+1) el = document.querySelector('[data-screen="closing"]');
+  else el = document.querySelector('[data-screen="done"]');
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProgress(i);
+}
+function updateProgress(i){
+  const shell=document.getElementById('progressShell');
+  if(i>=1 && i<=TOTAL_CAPAS){
+    shell.style.display='block';
+    document.getElementById('capaLabel').textContent=`Capa ${i} de ${TOTAL_CAPAS}`;
+    const pct=Math.round((i/TOTAL_CAPAS)*100);
+    document.getElementById('pctLabel').innerHTML=`<b>${pct}%</b>`;
+    document.getElementById('barFill').style.width=pct+'%';
+  } else if(i===TOTAL_CAPAS+1){
+    shell.style.display='block';
+    document.getElementById('capaLabel').textContent='Cierre';
+    document.getElementById('pctLabel').innerHTML='<b>100%</b>';
+    document.getElementById('barFill').style.width='100%';
+  } else { shell.style.display='none'; }
+}
+function start(){
+  const n=document.getElementById('f_nombre').value.trim();
+  if(n){ document.getElementById('closeName').textContent=n.split(' ')[0]; }
+  current=1; showByIndex(current); save();
+}
+function next(){ save(); current++; if(current>TOTAL_CAPAS) current=TOTAL_CAPAS+1; showByIndex(current); }
+function prev(){ current--; if(current<0)current=0; showByIndex(current); }
+
+function collect(){
+  const respuestas=[];
+  document.querySelectorAll('#capasMount textarea').forEach(t=>{
+    respuestas.push({capa:t.dataset.capa, pregunta:t.dataset.q, respuesta:t.value.trim()});
+  });
+  return {
+    nombre: document.getElementById('f_nombre').value.trim(),
+    email: document.getElementById('f_email').value.trim(),
+    fecha: new Date().toISOString(),
+    respuestas
+  };
+}
+
+async function enviar(){
+  const btn=document.getElementById('sendBtn');
+  const err=document.getElementById('sendErr');
+  err.style.display='none';
+  btn.disabled=true;
+  btn.innerHTML='<span class="loader"></span>Enviando…';
+  const payload=collect();
+  try{
+    if(WEBHOOK_URL.startsWith('http')){
+      await fetch(WEBHOOK_URL,{
+        method:'POST',
+        mode:'no-cors',                       // mismo patrón que tu encuesta
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify(payload)
+      });
+    }
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    current=TOTAL_CAPAS+2; showByIndex(current);
+  }catch(e){
+    btn.disabled=false; btn.innerHTML='Enviar mis respuestas';
+    err.style.display='block';
+  }
+}
+
+// reanudar si hay guardado
+(function init(){
+  const d=load();
+  if(d && d.respuestas && d.respuestas.some(r=>r.respuesta)){
+    document.getElementById('f_nombre').value=d.nombre||'';
+    document.getElementById('f_email').value=d.email||'';
+    const tas=document.querySelectorAll('#capasMount textarea');
+    d.respuestas.forEach((r,idx)=>{ if(tas[idx]) tas[idx].value=r.respuesta||''; });
+    document.getElementById('resumeNote').style.display='block';
+  }
+})();
+</script>
+</body>
+</html>
